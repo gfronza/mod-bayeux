@@ -1,0 +1,8 @@
+{
+  "description": "this module implements the server-side bayeux protocol for the vert.x",
+  "licenses": ["The Apache Software License Version 2.0"],
+  "author": "Germano Fronza",
+  "keywords": ["bayeux", "websocket", "http streaming", "flash socket", "jsonp", "longpolling", "realtime"],
+  "developers": ["Germano Fronza"],
+  "homepage": "https://github.com/gfronza/mod-bayeux"
+}
