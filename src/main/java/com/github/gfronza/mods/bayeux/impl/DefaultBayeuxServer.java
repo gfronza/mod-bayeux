@@ -14,7 +14,19 @@ import com.github.gfronza.mods.bayeux.impl.functions.BayeuxExtension;
  */
 public class DefaultBayeuxServer implements BayeuxServer {
 	
+	/**
+	 * Creates the default bayeux server overriding the default configs.
+	 * @param config
+	 */
 	public DefaultBayeuxServer(JsonObject config) {
+		// TODO
+	}
+
+	/**
+	 * Creates the default bayeux server using the default configs.
+	 * @param config
+	 */
+	public DefaultBayeuxServer() {
 		// TODO
 	}
 
@@ -25,14 +37,24 @@ public class DefaultBayeuxServer implements BayeuxServer {
 	}
 
 	@Override
-	public BayeuxExtension addExtension(BayeuxExtension extension) {
-		// TODO:
-		return extension;
+	public BayeuxExtension addIncomingExtension(BayeuxExtension extension) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public void removeExtension(BayeuxExtension extension) {
-		// TODO:
+	public BayeuxExtension addOutgoingExtension(BayeuxExtension extension) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	@Override
+	public void removeIncomingExtension(BayeuxExtension extension) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void removeOutgoingExtension(BayeuxExtension extension) {
+		// TODO Auto-generated method stub		
+	}
 }
