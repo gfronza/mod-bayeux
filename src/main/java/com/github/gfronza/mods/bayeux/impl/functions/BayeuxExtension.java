@@ -2,7 +2,7 @@ package com.github.gfronza.mods.bayeux.impl.functions;
 
 import org.vertx.java.core.http.HttpServerRequest;
 
-import com.github.gfronza.mods.bayeux.impl.Message;
+import com.github.gfronza.mods.bayeux.impl.protocol.Message;
 
 /**
  * Represents an incoming or outgoing extension.

@@ -1,5 +1,7 @@
 package com.github.gfronza.mods.bayeux.impl;
 
+import java.util.List;
+
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.json.JsonObject;
@@ -14,12 +16,19 @@ import com.github.gfronza.mods.bayeux.impl.functions.BayeuxExtension;
  */
 public class DefaultBayeuxServer implements BayeuxServer {
 	
+	private HttpServer httpServer;
+	private Vertx vertx;
+	private Configurations configurations;
+	
+	private List<BayeuxExtension> incomingExtensions;
+	private List<BayeuxExtension> outgoingExtensions;
+
 	/**
 	 * Creates the default bayeux server overriding the default configs.
 	 * @param config
 	 */
-	public DefaultBayeuxServer(JsonObject config) {
-		// TODO
+	public DefaultBayeuxServer(JsonObject configs) {
+		configurations = Configurations.getDefault().extend(configs);
 	}
 
 	/**
@@ -27,34 +36,35 @@ public class DefaultBayeuxServer implements BayeuxServer {
 	 * @param config
 	 */
 	public DefaultBayeuxServer() {
-		// TODO
+		configurations = Configurations.getDefault();
 	}
 
 	@Override
 	public BayeuxServer attach(final HttpServer httpServer, final Vertx vertx) {
-		// TODO:
+		this.httpServer = httpServer;
+		this.vertx = vertx;
 		return this;
 	}
 
 	@Override
 	public BayeuxExtension addIncomingExtension(BayeuxExtension extension) {
-		// TODO Auto-generated method stub
-		return null;
+		incomingExtensions.add(extension);
+		return extension;
 	}
 
 	@Override
 	public BayeuxExtension addOutgoingExtension(BayeuxExtension extension) {
-		// TODO Auto-generated method stub
-		return null;
+		outgoingExtensions.add(extension);
+		return extension;
 	}
 
 	@Override
 	public void removeIncomingExtension(BayeuxExtension extension) {
-		// TODO Auto-generated method stub
+		incomingExtensions.remove(extension);
 	}
 
 	@Override
 	public void removeOutgoingExtension(BayeuxExtension extension) {
-		// TODO Auto-generated method stub		
+		outgoingExtensions.remove(extension);		
 	}
 }

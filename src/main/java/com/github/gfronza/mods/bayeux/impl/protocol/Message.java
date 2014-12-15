@@ -1,4 +1,4 @@
-package com.github.gfronza.mods.bayeux.impl;
+package com.github.gfronza.mods.bayeux.impl.protocol;
 
 /**
  * Represents a message of the Bayeux Protocol.

@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.vertx.java.core.http.HttpServerRequest;
 
 import com.github.gfronza.mods.bayeux.impl.DefaultBayeuxServer;
-import com.github.gfronza.mods.bayeux.impl.Message;
 import com.github.gfronza.mods.bayeux.impl.functions.BayeuxExtension;
+import com.github.gfronza.mods.bayeux.impl.protocol.Message;
 
 /**
  * Test the usage of an Extension.
