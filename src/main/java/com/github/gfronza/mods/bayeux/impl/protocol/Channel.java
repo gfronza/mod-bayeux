@@ -1,10 +1,10 @@
 package com.github.gfronza.mods.bayeux.impl.protocol;
 
 /**
- * Represents a message of the Bayeux Protocol.
+ * Represents a server channel where clientes subscribe to.
  * @author Germano
  *
  */
-public class Message {
+public class Channel {
 	// TODO
 }

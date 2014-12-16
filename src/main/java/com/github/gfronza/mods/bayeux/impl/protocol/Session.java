@@ -1,10 +1,10 @@
 package com.github.gfronza.mods.bayeux.impl.protocol;
 
 /**
- * Represents a message of the Bayeux Protocol.
+ * Represents a client-server session.
  * @author Germano
  *
  */
-public class Message {
+public class Session {
 	// TODO
 }
