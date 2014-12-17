@@ -91,5 +91,22 @@ public class DefaultBayeuxServer implements BayeuxServer {
 		this.sessions = new HashMap<>();
 		this.channels = new HashMap<>();
 		this.transports = new LinkedHashMap<>(); // order matters here.
+		
+		createMetaChannels();
+	}
+	
+	private void createMetaChannels() {
+		this.createChannelIfAbsent(Channel.META_CONNECT);
+		this.createChannelIfAbsent(Channel.META_DISCONNECT);
+		this.createChannelIfAbsent(Channel.META_HANDSHAKE);
+		this.createChannelIfAbsent(Channel.META_SUBSCRIBE);
+		this.createChannelIfAbsent(Channel.META_UNSUBSCRIBE);
+	}
+	
+	private Channel createChannelIfAbsent(String channelName) {
+		Channel c = new Channel(channelName);
+		
+		this.channels.putIfAbsent(channelName, c);
+		return c;
 	}
 }
