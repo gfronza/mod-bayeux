@@ -69,8 +69,9 @@ public class Channel {
         
 		if (added) {
         	listeners.stream()
-			   		 .filter(c -> c instanceof ChannelSubscriptionHandler)
-			   		 .forEach(c -> ((ChannelSubscriptionHandler)c).subscribed(session, this));
+        			 .filter(c -> c instanceof ChannelSubscriptionHandler)
+        			 .map(ChannelSubscriptionHandler.class::cast)
+        			 .forEach(c -> c.subscribed(session, this));
         }
         
         return added;
@@ -91,8 +92,9 @@ public class Channel {
         
 		if (removed) {
         	listeners.stream()
-			   		 .filter(c -> c instanceof ChannelSubscriptionHandler)
-			   		 .forEach(c -> ((ChannelSubscriptionHandler)c).unsubscribed(session, this));
+        			 .filter(c -> c instanceof ChannelSubscriptionHandler)
+        			 .map(ChannelSubscriptionHandler.class::cast)
+        			 .forEach(c -> c.unsubscribed(session, this));
         }
         
         return removed;
