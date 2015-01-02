@@ -58,4 +58,7 @@ public class Configurations {
 		return this;
 	}
 	
+	public String getMount() {
+		return this.configs.getString(MOUNT);
+	}
 }

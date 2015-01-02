@@ -19,6 +19,7 @@ import org.vertx.java.core.Vertx;
 import org.vertx.java.core.http.HttpServer;
 
 import com.github.gfronza.mods.bayeux.impl.functions.BayeuxExtension;
+import com.github.gfronza.mods.bayeux.impl.protocol.Channel;
 
 /**
  * Definition of a Bayeux server.
@@ -63,4 +64,11 @@ public interface BayeuxServer {
 	 * @param extension to be removed.
 	 */
 	public void removeOutgoingExtension(BayeuxExtension extension);
+
+	/**
+	 * Creates a channel with the given name (if absent).
+	 * @param channelName name of the channel.
+	 * @return Channel created.
+	 */
+	public Channel createChannel(String channelName);
 }

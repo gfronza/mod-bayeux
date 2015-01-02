@@ -21,8 +21,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.http.HttpServer;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.HttpServerResponse;
+import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonObject;
 
 import com.github.gfronza.mods.bayeux.BayeuxServer;
@@ -74,6 +78,9 @@ public class DefaultBayeuxServer implements BayeuxServer {
 	public BayeuxServer attach(final HttpServer httpServer, final Vertx vertx) {
 		this.httpServer = httpServer;
 		this.vertx = vertx;
+		
+		registerRequestHandler();
+		
 		return this;
 	}
 
@@ -99,6 +106,17 @@ public class DefaultBayeuxServer implements BayeuxServer {
 		this.outgoingExtensions.remove(extension);		
 	}
 	
+	/**
+	 * Creates a channel with the given name (if absent).
+	 * @param channelName name of the channel.
+	 * @return Channel created.
+	 */
+	@Override
+	public Channel createChannel(String channelName) {
+		Channel c = new Channel(channelName);
+		return this.channels.putIfAbsent(channelName, c);
+	}
+	
 	private void initialize() {
 		this.incomingExtensions = new ArrayList<>();
 		this.outgoingExtensions = new ArrayList<>();
@@ -111,17 +129,41 @@ public class DefaultBayeuxServer implements BayeuxServer {
 	}
 	
 	private void createMetaChannels() {
-		this.createChannelIfAbsent(Channel.META_CONNECT);
-		this.createChannelIfAbsent(Channel.META_DISCONNECT);
-		this.createChannelIfAbsent(Channel.META_HANDSHAKE);
-		this.createChannelIfAbsent(Channel.META_SUBSCRIBE);
-		this.createChannelIfAbsent(Channel.META_UNSUBSCRIBE);
+		this.createChannel(Channel.META_CONNECT);
+		this.createChannel(Channel.META_DISCONNECT);
+		this.createChannel(Channel.META_HANDSHAKE);
+		this.createChannel(Channel.META_SUBSCRIBE);
+		this.createChannel(Channel.META_UNSUBSCRIBE);
 	}
 	
-	private Channel createChannelIfAbsent(String channelName) {
-		Channel c = new Channel(channelName);
+	private void registerRequestHandler() {
+		httpServer.requestHandler(
+			new RouteMatcher()
+				.all(configurations.getMount(), new Handler<HttpServerRequest>() {
+					@Override
+					public void handle(HttpServerRequest request) {
+						Transport transport = getProperHttpTransport(request);
+						if (transport != null) {
+							transport.handle(request);
+						}
+						else {
+							request.response().setStatusCode(400) // BAD REQUEST
+											  .setStatusMessage("Bayeux Transport Not Found")
+											  .end();
+						}
+					}
+				}
+			)
+		);
+	}
+	
+	private Transport getProperHttpTransport(HttpServerRequest request) {
+		for (Transport t : this.transports.values()) {
+			if (t.accept(request)) {
+				return t;
+			}
+		}
 		
-		this.channels.putIfAbsent(channelName, c);
-		return c;
+		return null;
 	}
 }

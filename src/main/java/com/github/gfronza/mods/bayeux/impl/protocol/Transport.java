@@ -15,11 +15,30 @@
  */
 package com.github.gfronza.mods.bayeux.impl.protocol;
 
+import org.vertx.java.core.http.HttpServerRequest;
+
 /**
  * Represents an abstract transport (like websockets, long-polling, callback-polling, etc).
  * @author Germano
  *
  */
 public abstract class Transport {
-	// TODO
+
+	/**
+	 * Checks if this transport can handle the given HTTP request.
+	 * @param request
+	 * @return
+	 */
+	public boolean accept(HttpServerRequest request) {
+		// TODO
+		return false;
+	}
+
+	/**
+	 * Handles the given Http request.
+	 * @param request
+	 */
+	public void handle(HttpServerRequest request) {
+		// TODO		
+	}
 }
