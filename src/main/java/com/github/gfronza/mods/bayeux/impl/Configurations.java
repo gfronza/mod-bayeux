@@ -15,7 +15,14 @@
  */
 package com.github.gfronza.mods.bayeux.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
+
+import com.github.gfronza.mods.bayeux.impl.protocol.transports.CallbackPollingTransport;
+import com.github.gfronza.mods.bayeux.impl.protocol.transports.LongPollingTransport;
 
 /**
  * Configurations for the Bayeux Server.
@@ -23,10 +30,11 @@ import org.vertx.java.core.json.JsonObject;
  *
  */
 public class Configurations {
-
+	
 	public static final String MOUNT = "mount";
 	public static final String TIMEOUT = "timeout";
 	public static final String PING = "ping";
+	public static final String TRANSPORTS = "transports";
 	
 	private final JsonObject configs;
 	
@@ -39,6 +47,10 @@ public class Configurations {
 		this.configs.putString(MOUNT, "/rt");
 		this.configs.putNumber(TIMEOUT, 60);
 		this.configs.putNumber(PING, 60);
+		this.configs.putArray(TRANSPORTS, new JsonArray()
+			.add(CallbackPollingTransport.class.getName())
+			.add(LongPollingTransport.class.getName())
+		);
 	}
 	
 	/**
@@ -58,7 +70,25 @@ public class Configurations {
 		return this;
 	}
 	
+	/**
+	 * Returns the mount path (where the bayeux protocol will operate).
+	 * @return
+	 */
 	public String getMount() {
 		return this.configs.getString(MOUNT);
+	}
+
+	/**
+	 * Returns the list of transports class names.
+	 * @return
+	 */
+	public List<String> getTransports() {
+		List<String> list = new ArrayList<>();
+		
+		this.configs.getArray(TRANSPORTS).forEach(o -> {
+			list.add((String)o);
+		});
+		
+		return list;
 	}
 }

@@ -13,33 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.gfronza.mods.bayeux.impl.protocol;
+package com.github.gfronza.mods.bayeux.impl.protocol.transports;
 
 import org.vertx.java.core.http.HttpServerRequest;
 
-/**
- * Represents an abstract transport (like websockets, long-polling, callback-polling, etc).
- * @author Germano
- *
- */
-public interface Transport {
+import com.github.gfronza.mods.bayeux.impl.protocol.Transport;
 
-	/**
-	 * Returns the name of this transport.
-	 * @return
-	 */
-	public String getName();
+public class LongPollingTransport implements Transport {
+
+	@Override
+	public String getName() {
+		// TODO
+		return null;
+	}
 	
-	/**
-	 * Checks if this transport can handle the given HTTP request.
-	 * @param request
-	 * @return
-	 */
-	public boolean accept(HttpServerRequest request);
+	@Override
+	public boolean accept(HttpServerRequest request) {
+		// TODO
+		return false;
+	}
 
-	/**
-	 * Handles the given Http request.
-	 * @param request
-	 */
-	public void handle(HttpServerRequest request);
+	@Override
+	public void handle(HttpServerRequest request) {
+		// TODO
+		
+	}
+	
 }

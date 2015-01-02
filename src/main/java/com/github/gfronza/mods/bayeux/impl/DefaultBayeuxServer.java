@@ -20,12 +20,13 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.HttpServerResponse;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonObject;
 
@@ -125,9 +126,26 @@ public class DefaultBayeuxServer implements BayeuxServer {
 		this.channels = new HashMap<>();
 		this.transports = new LinkedHashMap<>(); // order matters here.
 		
+		createTransports();
 		createMetaChannels();
 	}
 	
+	private void createTransports() {
+		for (String transportClass : this.configurations.getTransports()) {
+			try {
+				// create a new instance of the transport.
+				Transport t = (Transport) Class.forName(transportClass).newInstance();
+				
+				// put it into the map.
+				this.transports.put(t.getName(), t);
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				Logger.getLogger("mod-bayeux.transports").log(
+						Level.FINE, "Exception creating the transport: " + transportClass, e
+				);
+			}
+		}
+	}
+
 	private void createMetaChannels() {
 		this.createChannel(Channel.META_CONNECT);
 		this.createChannel(Channel.META_DISCONNECT);
