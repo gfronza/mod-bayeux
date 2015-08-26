@@ -15,6 +15,12 @@
  */
 package com.github.gfronza.mods.bayeux.impl;
 
+import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,13 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.Vertx;
-import org.vertx.java.core.http.HttpServer;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.RouteMatcher;
-import org.vertx.java.core.json.JsonObject;
 
 import com.github.gfronza.mods.bayeux.BayeuxServer;
 import com.github.gfronza.mods.bayeux.impl.functions.BayeuxExtension;
@@ -42,21 +41,21 @@ import com.github.gfronza.mods.bayeux.impl.protocol.Transport;
  *
  */
 public class DefaultBayeuxServer implements BayeuxServer {
-	
+
 	private HttpServer httpServer;
 	private Vertx vertx;
 	private Configurations configurations;
-	
+
 	private List<BayeuxExtension> incomingExtensions;
 	private List<BayeuxExtension> outgoingExtensions;
-	
+
 	private Map<String, Session> sessions;
 	private Map<String, Channel> channels;
 	private Map<String, Transport> transports;
 
 	// Later on I'll need to use a Scheduller in this class:
 	// https://github.com/sendgridlabs/vertx-scheduler
-	
+
 	/**
 	 * Creates the default bayeux server overriding the default configs.
 	 * @param config
@@ -79,9 +78,9 @@ public class DefaultBayeuxServer implements BayeuxServer {
 	public BayeuxServer attach(final HttpServer httpServer, final Vertx vertx) {
 		this.httpServer = httpServer;
 		this.vertx = vertx;
-		
+
 		registerRequestHandler();
-		
+
 		return this;
 	}
 
@@ -104,9 +103,9 @@ public class DefaultBayeuxServer implements BayeuxServer {
 
 	@Override
 	public void removeOutgoingExtension(BayeuxExtension extension) {
-		this.outgoingExtensions.remove(extension);		
+		this.outgoingExtensions.remove(extension);
 	}
-	
+
 	/**
 	 * Creates a channel with the given name (if absent).
 	 * @param channelName name of the channel.
@@ -117,25 +116,25 @@ public class DefaultBayeuxServer implements BayeuxServer {
 		Channel c = new Channel(channelName);
 		return this.channels.putIfAbsent(channelName, c);
 	}
-	
+
 	private void initialize() {
 		this.incomingExtensions = new ArrayList<>();
 		this.outgoingExtensions = new ArrayList<>();
-		
+
 		this.sessions = new HashMap<>();
 		this.channels = new HashMap<>();
 		this.transports = new LinkedHashMap<>(); // order matters here.
-		
+
 		createTransports();
 		createMetaChannels();
 	}
-	
+
 	private void createTransports() {
 		for (String transportClass : this.configurations.getTransports()) {
 			try {
 				// create a new instance of the transport.
 				Transport t = (Transport) Class.forName(transportClass).newInstance();
-				
+
 				// put it into the map.
 				this.transports.put(t.getName(), t);
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -153,35 +152,34 @@ public class DefaultBayeuxServer implements BayeuxServer {
 		this.createChannel(Channel.META_SUBSCRIBE);
 		this.createChannel(Channel.META_UNSUBSCRIBE);
 	}
-	
+
 	private void registerRequestHandler() {
-		httpServer.requestHandler(
-			new RouteMatcher()
-				.all(configurations.getMount(), new Handler<HttpServerRequest>() {
-					@Override
-					public void handle(HttpServerRequest request) {
-						Transport transport = getProperHttpTransport(request);
-						if (transport != null) {
-							transport.handle(request);
-						}
-						else {
-							request.response().setStatusCode(400) // BAD REQUEST
-											  .setStatusMessage("Bayeux Transport Not Found")
-											  .end();
-						}
-					}
-				}
-			)
-		);
+	    Router router = Router.router(vertx);
+
+	    router.route().handler(routingContext -> {
+	        HttpServerRequest request = routingContext.request();
+            Transport transport = getProperHttpTransport(request);
+
+            if (transport != null) {
+                transport.handle(request);
+            }
+            else {
+                request.response().setStatusCode(400) // BAD REQUEST
+                                  .setStatusMessage("Bayeux Transport Not Found")
+                                  .end();
+            }
+	    });
+
+	    httpServer.requestHandler(router::accept);
 	}
-	
+
 	private Transport getProperHttpTransport(HttpServerRequest request) {
 		for (Transport t : this.transports.values()) {
 			if (t.accept(request)) {
 				return t;
 			}
 		}
-		
+
 		return null;
 	}
 }

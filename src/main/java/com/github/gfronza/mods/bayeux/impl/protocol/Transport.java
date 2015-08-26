@@ -15,7 +15,7 @@
  */
 package com.github.gfronza.mods.bayeux.impl.protocol;
 
-import org.vertx.java.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerRequest;
 
 /**
  * Represents an abstract transport (like websockets, long-polling, callback-polling, etc).
@@ -29,7 +29,7 @@ public interface Transport {
 	 * @return
 	 */
 	public String getName();
-	
+
 	/**
 	 * Checks if this transport can handle the given HTTP request.
 	 * @param request

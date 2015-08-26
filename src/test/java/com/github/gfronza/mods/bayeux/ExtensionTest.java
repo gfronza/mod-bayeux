@@ -15,8 +15,9 @@
  */
 package com.github.gfronza.mods.bayeux;
 
+import io.vertx.core.http.HttpServerRequest;
+
 import org.junit.Test;
-import org.vertx.java.core.http.HttpServerRequest;
 
 import com.github.gfronza.mods.bayeux.impl.DefaultBayeuxServer;
 import com.github.gfronza.mods.bayeux.impl.functions.BayeuxExtension;
@@ -33,18 +34,18 @@ public class ExtensionTest {
 	public void testAddIncomingExtension() {
 		// server instance, not important right now.
 		BayeuxServer server = new DefaultBayeuxServer();
-		
+
 		// add the extension (incoming only).
 		server.addIncomingExtension((message, request) -> {
 			// do something with the message.
 		});
 	}
-	
+
 	@Test
 	public void testAddOutgoingExtension() {
 		// server instance, not important right now.
 		BayeuxServer server = new DefaultBayeuxServer();
-		
+
 		// add the extension (incoming only).
 		server.addOutgoingExtension((message, request) -> {
 			// do something with the message.
@@ -55,7 +56,7 @@ public class ExtensionTest {
 	public void testAddIncomingAsAnonymousClassExtension() {
 		// server instance, not important right now.
 		BayeuxServer server = new DefaultBayeuxServer();
-		
+
 		// add the extension (incoming only).
 		server.addIncomingExtension(new BayeuxExtension() {
 			@Override

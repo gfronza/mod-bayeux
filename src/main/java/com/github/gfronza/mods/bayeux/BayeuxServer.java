@@ -15,8 +15,8 @@
  */
 package com.github.gfronza.mods.bayeux;
 
-import org.vertx.java.core.Vertx;
-import org.vertx.java.core.http.HttpServer;
+import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServer;
 
 import com.github.gfronza.mods.bayeux.impl.functions.BayeuxExtension;
 import com.github.gfronza.mods.bayeux.impl.protocol.Channel;
@@ -34,31 +34,31 @@ public interface BayeuxServer {
 	 * @return this
 	 */
 	public BayeuxServer attach(final HttpServer httpServer, final Vertx vertx);
-	
+
 	/**
-	 * Adds an incoming extension to the bayeux server. Extensions allows you to 
+	 * Adds an incoming extension to the bayeux server. Extensions allows you to
 	 * intercept incoming or outgoing messages as they pass in and out.
 	 * This lets you mofidy the content of them for whatever purpose.
 	 * @param extension to be added.
 	 * @return BayeuxExtension the extension instance.
 	 */
 	public BayeuxExtension addIncomingExtension(BayeuxExtension extension);
-	
+
 	/**
-	 * Adds an outgoing extension to the bayeux server. Extensions allows you to 
+	 * Adds an outgoing extension to the bayeux server. Extensions allows you to
 	 * intercept incoming or outgoing messages as they pass in and out.
 	 * This lets you mofidy the content of them for whatever purpose.
 	 * @param extension to be added.
 	 * @return BayeuxExtension the extension instance.
 	 */
 	public BayeuxExtension addOutgoingExtension(BayeuxExtension extension);
-	
+
 	/**
 	 * Removes the given incoming extension if exists.
 	 * @param extension to be removed.
 	 */
 	public void removeIncomingExtension(BayeuxExtension extension);
-	
+
 	/**
 	 * Removes the given outgoing extension if exists.
 	 * @param extension to be removed.

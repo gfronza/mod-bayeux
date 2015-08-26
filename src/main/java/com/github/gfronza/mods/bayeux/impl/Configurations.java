@@ -15,11 +15,11 @@
  */
 package com.github.gfronza.mods.bayeux.impl;
 
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
 import com.github.gfronza.mods.bayeux.impl.protocol.transports.CallbackPollingTransport;
 import com.github.gfronza.mods.bayeux.impl.protocol.transports.LongPollingTransport;
@@ -30,29 +30,29 @@ import com.github.gfronza.mods.bayeux.impl.protocol.transports.LongPollingTransp
  *
  */
 public class Configurations {
-	
+
 	public static final String MOUNT = "mount";
 	public static final String TIMEOUT = "timeout";
 	public static final String PING = "ping";
 	public static final String TRANSPORTS = "transports";
-	
+
 	private final JsonObject configs;
-	
+
 	/**
 	 * Hidden Constructor.
 	 * Use the method getDefault instead.
 	 */
 	private Configurations() {
 		this.configs = new JsonObject();
-		this.configs.putString(MOUNT, "/rt");
-		this.configs.putNumber(TIMEOUT, 60);
-		this.configs.putNumber(PING, 60);
-		this.configs.putArray(TRANSPORTS, new JsonArray()
+		this.configs.put(MOUNT, "/rt");
+		this.configs.put(TIMEOUT, 60);
+		this.configs.put(PING, 60);
+		this.configs.put(TRANSPORTS, new JsonArray()
 			.add(CallbackPollingTransport.class.getName())
 			.add(LongPollingTransport.class.getName())
 		);
 	}
-	
+
 	/**
 	 * Returns the default configuratuins.
 	 * @return
@@ -60,7 +60,7 @@ public class Configurations {
 	public static Configurations getDefault() {
 		return new Configurations();
 	}
-	
+
 	/**
 	 * Extends the default configurations.
 	 * @param configs to be merged into the defaults.
@@ -69,7 +69,7 @@ public class Configurations {
 		configs.mergeIn(this.configs);
 		return this;
 	}
-	
+
 	/**
 	 * Returns the mount path (where the bayeux protocol will operate).
 	 * @return
@@ -84,11 +84,11 @@ public class Configurations {
 	 */
 	public List<String> getTransports() {
 		List<String> list = new ArrayList<>();
-		
-		this.configs.getArray(TRANSPORTS).forEach(o -> {
+
+		this.configs.getJsonArray(TRANSPORTS).forEach(o -> {
 			list.add((String)o);
 		});
-		
+
 		return list;
 	}
 }

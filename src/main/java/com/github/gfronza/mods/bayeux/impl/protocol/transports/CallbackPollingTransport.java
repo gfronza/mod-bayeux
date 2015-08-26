@@ -15,7 +15,7 @@
  */
 package com.github.gfronza.mods.bayeux.impl.protocol.transports;
 
-import org.vertx.java.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerRequest;
 
 import com.github.gfronza.mods.bayeux.impl.protocol.Transport;
 
@@ -26,7 +26,7 @@ public class CallbackPollingTransport implements Transport {
 		// TODO
 		return null;
 	}
-	
+
 	@Override
 	public boolean accept(HttpServerRequest request) {
 		// TODO
@@ -36,7 +36,7 @@ public class CallbackPollingTransport implements Transport {
 	@Override
 	public void handle(HttpServerRequest request) {
 		// TODO
-		
+
 	}
 
 }

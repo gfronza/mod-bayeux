@@ -15,9 +15,9 @@
  */
 package com.github.gfronza.mods.bayeux.impl.protocol;
 
-import java.util.List;
+import io.vertx.core.http.HttpServerRequest;
 
-import org.vertx.java.core.http.HttpServerRequest;
+import java.util.List;
 
 import com.github.gfronza.mods.bayeux.impl.functions.BayeuxExtension;
 
@@ -29,7 +29,7 @@ import com.github.gfronza.mods.bayeux.impl.functions.BayeuxExtension;
 public class Message {
 
 	// TODO
-	
+
 	public void pipeThrough(List<BayeuxExtension> extensions, HttpServerRequest request) {
 		for (BayeuxExtension e : extensions) {
 			e.handle(this, request);
